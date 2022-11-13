@@ -1,6 +1,6 @@
 // import React, { Component } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity,
-  TextInput,Keyboard } from 'react-native';
+  TextInput,Keyboard, Image } from 'react-native';
 import React, { useEffect, route, Component, useState } from "react";
 class Profile extends Component {
   
@@ -9,7 +9,8 @@ class Profile extends Component {
     this.state = {
       data: '',
       ip_address: '',
-      student_id:''
+      student_id:'', 
+      error: ''
     };
   }
   
@@ -18,7 +19,9 @@ class Profile extends Component {
   const { data } = this.state;
   const { ip_address } = this.state;
   const {student_id}= this.state;
- // const { id } = this.state;
+ // const { id } = this.state; 
+
+ console.log(ip_address);
 
   fetch('http://localhost/smart_attd_app/attendance_api/take_attendance.php', {
     method: 'post',
@@ -39,6 +42,7 @@ class Profile extends Component {
     })
     .catch((error) => {
       console.error(error);
+      this.setState({error: error})
     });
 };
 
@@ -84,8 +88,27 @@ class Profile extends Component {
   
     return (
       <View style={styles.container}>
+
         <Text style={styles.pageName}>Profile</Text>
-        <Text>Active Class: {this.state.data.cc_id}</Text>
+
+        <View style={styles.class}> 
+         <Text style={styles.article}>Active Class: {this.state.data.cc_id}</Text>
+        </View> 
+         
+        <Text> {this.state.error} </Text>
+
+        <View style={{marginVertical: 80}}> 
+           <Image  
+            style={{
+              width: 200, 
+              height: 180, 
+              borderRadius: 8
+            }}
+            source={{uri: 'https://th.bing.com/th/id/R.02891eff04a59f9ed7fa076b490525b4?rik=pXzF66LhzNbSJQ&pid=ImgRaw&r=0'}}
+           />
+        </View>
+
+        <View style={styles.attendanceBtn}> 
         <TouchableOpacity
           onPress={this.takeAttendance}
           style={{
@@ -96,6 +119,7 @@ class Profile extends Component {
           }}>
           <Text style={{ color: 'white' }}>Take Attendance</Text>
         </TouchableOpacity>
+        </View> 
         
       </View>
     );
@@ -122,8 +146,18 @@ const styles = StyleSheet.create({
     margin: 10,
     fontWeight: 'bold',
     color: '#000',
+    fontSize: 18,
     textAlign: 'center',
   },
+  attendanceBtn: { 
+    paddingVertical: 50
+  }, 
+  class: { 
+   paddingVertical: 10
+  }, 
+  article: { 
+    fontSize: 20
+  }
 });
 
 export default App
